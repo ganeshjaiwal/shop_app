@@ -16,15 +16,17 @@ class ProductOverview extends StatelessWidget {
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
-        padding: EdgeInsets.all(15),
+          crossAxisCount: 2,
+          childAspectRatio: 3 / 4,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+        ),
+        // padding: EdgeInsets.all(15),
         itemBuilder: (ctx, i) => ProductItem(
           title: loadedProducts[i].title,
-          description: loadedProducts[i].description,
+          id: loadedProducts[i].id,
           imageUrl: loadedProducts[i].imageUrl,
+          price: loadedProducts[i].price,
         ),
         itemCount: loadedProducts.length,
       ),
