@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
+import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
 
 enum FilterSectionValue { Favorite, All }
@@ -20,26 +23,37 @@ class _ProductOverviewState extends State<ProductOverview> {
         title: Text("W3Shopee"),
         actions: <Widget>[
           PopupMenuButton(
-              onSelected: (FilterSectionValue selectedValue) {
-                setState(() {
-                  if (selectedValue == FilterSectionValue.Favorite) {
-                    _shouldOnlyFav = true;
-                  } else {
-                    _shouldOnlyFav = false;
-                  }
-                });
-              },
-              icon: Icon(Icons.more_vert),
-              itemBuilder: (_) => [
-                    PopupMenuItem(
-                      child: Text("Show Favorite"),
-                      value: FilterSectionValue.Favorite,
-                    ),
-                    PopupMenuItem(
-                      child: Text("Show All"),
-                      value: FilterSectionValue.All,
-                    ),
-                  ])
+            onSelected: (FilterSectionValue selectedValue) {
+              setState(() {
+                if (selectedValue == FilterSectionValue.Favorite) {
+                  _shouldOnlyFav = true;
+                } else {
+                  _shouldOnlyFav = false;
+                }
+              });
+            },
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text("Show Favorite"),
+                value: FilterSectionValue.Favorite,
+              ),
+              PopupMenuItem(
+                child: Text("Show All"),
+                value: FilterSectionValue.All,
+              ),
+            ],
+          ),
+          Consumer<CartProvider>(
+            builder: (_, cartItem, ch) => Badge(
+              child: ch,
+              value: cartItem.itemsCount > 9 ? '9+' : '${cartItem.itemsCount}',
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+          ),
         ],
       ),
       body: ProductsGrid(_shouldOnlyFav),

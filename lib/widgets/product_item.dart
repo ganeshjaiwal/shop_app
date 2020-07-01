@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../providers/product_provider.dart';
 import '../screens/product_details_screen.dart';
 
@@ -71,10 +72,17 @@ class ProductItem extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add_shopping_cart),
-                    onPressed: () {},
-                    color: Theme.of(context).accentColor,
+                  Consumer<CartProvider>(
+                    builder: (_, cartItem, ch) => IconButton(
+                      icon: Icon(cartItem.isAvailableInCart(product.id)
+                          ? Icons.shopping_cart
+                          : Icons.add_shopping_cart),
+                      onPressed: () {
+                        cartItem.addItem(
+                            product.id, product.price, product.title);
+                      },
+                      color: Theme.of(context).accentColor,
+                    ),
                   ),
                 ],
               )
