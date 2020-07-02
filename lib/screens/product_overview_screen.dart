@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
+import '../screens/cart_screen.dart';
 
 enum FilterSectionValue { Favorite, All }
 
@@ -51,7 +52,9 @@ class _ProductOverviewState extends State<ProductOverview> {
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
             ),
           ),
         ],

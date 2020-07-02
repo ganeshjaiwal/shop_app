@@ -63,6 +63,14 @@ class CartProvider with ChangeNotifier {
     return cnt;
   }
 
+  double get totalAmount {
+    double amount = 0;
+    _items.forEach((key, value) {
+      amount += value.quantity * value.price;
+    });
+    return amount;
+  }
+
   bool isAvailableInCart(prodId) {
     return _items.containsKey(prodId);
   }
