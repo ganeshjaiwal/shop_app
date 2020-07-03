@@ -4,7 +4,7 @@ class CartItem {
   final String id;
   final String title;
   final double price;
-  final int quantity;
+  int quantity;
 
   CartItem({
     @required this.id,
@@ -73,5 +73,19 @@ class CartProvider with ChangeNotifier {
 
   bool isAvailableInCart(prodId) {
     return _items.containsKey(prodId);
+  }
+
+  void addQuantityByOne(String prodId) {
+    _items[prodId].quantity += 1;
+    notifyListeners();
+  }
+
+  void removeQuantityByOne(String prodId) {
+    if (_items[prodId].quantity == 1) {
+      _items.removeWhere((key, value) => key == prodId);
+    } else {
+      _items[prodId].quantity -= 1;
+    }
+    notifyListeners();
   }
 }

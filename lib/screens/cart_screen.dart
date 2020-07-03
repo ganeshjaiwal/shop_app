@@ -41,7 +41,7 @@ class CartScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "\$${cartProvider.totalAmount}",
+                  "\$${cartProvider.totalAmount.toStringAsFixed(2)}",
                   style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontSize: 17,
@@ -51,8 +51,8 @@ class CartScreen extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: PageView.builder(
+          Flexible(
+            child: ListView.builder(
               itemCount: cartProvider.items.length,
               itemBuilder: (ctx, i) => CartItemWidget.CartItem(
                 prodId: cartProvider.items.keys.toList()[i],

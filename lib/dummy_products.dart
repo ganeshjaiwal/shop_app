@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import './providers/product_provider.dart';
 
 final DUMMY_PRODUCTS = [
