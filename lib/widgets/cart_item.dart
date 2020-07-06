@@ -26,6 +26,17 @@ class CartItem extends StatelessWidget {
       child: Dismissible(
         key: ValueKey(prodId),
         background: Container(
+          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+          padding: EdgeInsets.only(left: 20),
+          alignment: Alignment.centerLeft,
+          color: Theme.of(context).accentColor,
+          child: Icon(
+            Icons.favorite,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        secondaryBackground: Container(
           padding: EdgeInsets.only(right: 20),
           alignment: Alignment.centerRight,
           color: Theme.of(context).errorColor,
@@ -35,7 +46,14 @@ class CartItem extends StatelessWidget {
             size: 30,
           ),
         ),
-        direction: DismissDirection.endToStart,
+        // direction: DismissDirection.endToStart,
+        onDismissed: (direction) {
+          if (DismissDirection.startToEnd == direction) {
+            productInCart.addToFavorite();
+          }
+          cartProvider.removeItem(prodId);
+        },
+        confirmDismiss: (direction) => this.promptUser(direction, context),
         child: Card(
           elevation: 3,
           child: Container(
@@ -158,7 +176,9 @@ class CartItem extends StatelessWidget {
                                       '$quantity x \$${productInCart.price} = ',
                                       style: TextStyle(color: Colors.grey)),
                                   Text(
-                                    '\$${quantity * productInCart.price}',
+                                    '\$' +
+                                        (quantity * productInCart.price)
+                                            .toStringAsFixed(2),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Colors.lightBlue,
@@ -179,5 +199,43 @@ class CartItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> promptUser(
+      DismissDirection direction, BuildContext context) async {
+    String title;
+    String content;
+    if (direction == DismissDirection.startToEnd) {
+      // This is a delete action
+      title = "Add to favorite";
+      content =
+          "Do you want to remove this item from the cart and add it to favorite?";
+    } else {
+      // This is an archive action
+      title = "Remove from cart";
+      content = "Do you want to delete this item from the cart?";
+    }
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  return Navigator.of(context).pop(true);
+                },
+                child: Text("Yes"),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  return Navigator.of(context).pop(false);
+                },
+                child: Text("No"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

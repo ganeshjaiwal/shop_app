@@ -21,4 +21,9 @@ class ProductProvider with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
   }
+
+  void addToFavorite() {
+    isFavorite = true;
+    notifyListeners();
+  }
 }
