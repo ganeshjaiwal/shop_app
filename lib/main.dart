@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/orders_provider.dart';
 
 import './screens/cart_screen.dart';
 import './providers/cart_provider.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: CartProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => OrdersProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'W3Shopee',
