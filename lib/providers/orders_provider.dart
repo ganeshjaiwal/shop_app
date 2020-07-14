@@ -5,7 +5,7 @@ import '../providers/cart_provider.dart';
 class OrderItem {
   final String id;
   final double amount;
-  final List<CartProvider> products;
+  final List<CartItem> products;
   final DateTime date;
 
   OrderItem({
@@ -23,7 +23,7 @@ class OrdersProvider with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(List<CartProvider> cartItems, double totalAmt) {
+  void addOrder(List<CartItem> cartItems, double totalAmt) {
     _orders.insert(
       0,
       OrderItem(
