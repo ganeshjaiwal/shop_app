@@ -5,12 +5,14 @@ class CartItem {
   final String title;
   final double price;
   int quantity;
+  final String prodId;
 
   CartItem({
     @required this.id,
     @required this.price,
     @required this.title,
     @required this.quantity,
+    @required this.prodId,
   });
 }
 
@@ -36,6 +38,7 @@ class CartProvider with ChangeNotifier {
           title: title,
           price: price,
           quantity: 1,
+          prodId: prodId,
         ),
       );
     }
@@ -50,6 +53,7 @@ class CartProvider with ChangeNotifier {
         title: existingCartItem.title,
         price: existingCartItem.price,
         quantity: 1,
+        prodId: prodId,
       ),
     );
     notifyListeners();

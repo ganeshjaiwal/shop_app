@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
 
 import '../providers/orders_provider.dart' as ord;
@@ -48,43 +49,146 @@ class _OrderItemState extends State<OrderItem> {
           ),
           if (_expanded)
             Container(
-              height: min(widget.orderItem.products.length * 120.0 + 50, 300),
-              child: ListView.builder(
-                itemCount: widget.orderItem.products.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 2,
-                    margin: EdgeInsets.only(bottom: 4),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        child: Text("1"),
-                      ),
-                      // Image.network(
-                      //   prodProvider
-                      //       .findById(widget.orderItem.products[index].id)
-                      //       .imageUrl,
-                      //   width: 60,
-                      // ),
-                      title: Text("11111"
-                          // prodProvider
-                          //     .findById(widget.orderItem.products[index].id)
-                          //     .title,
-                          ),
-                      subtitle: Text("222222"
-                          // prodProvider
-                          //     .findById(widget.orderItem.products[index].id)
-                          //     .description,
-                          ),
-                      trailing: Text(
-                        "x${widget.orderItem.products[index].quantity}",
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                height: min(widget.orderItem.products.length * 120.0 + 50, 300),
+                child: ListView(
+                  children: createListOfOrderItems(
+                    widget.orderItem.products,
+                    prodProvider,
+                  ),
+                )
+
+                // ListView.builder(
+                //   itemCount: widget.orderItem.products.length,
+                //   itemBuilder: (context, index) {
+                //     return Card(
+                //       elevation: 2,
+                //       margin: EdgeInsets.only(bottom: 4),
+                //       child: ListTile(
+                //         leading: CircleAvatar(
+                //           child: Text("1"),
+                //         ),
+                //         // Image.network(
+                //         //   prodProvider
+                //         //       .findById(widget.orderItem.products[index].id)
+                //         //       .imageUrl,
+                //         //   width: 60,
+                //         // ),
+                //         title: Text("11111"
+                //             // prodProvider
+                //             //     .findById(widget.orderItem.products[index].id)
+                //             //     .title,
+                //             ),
+                //         subtitle: Text("222222"
+                //             // prodProvider
+                //             //     .findById(widget.orderItem.products[index].id)
+                //             //     .description,
+                //             ),
+                //         trailing: Text(
+                //           "x${widget.orderItem.products[index].quantity}",
+                //         ),
+                //       ),
+                //     );
+                //   },
+                // ),
+                ),
         ],
       ),
     );
+  }
+
+  List<Widget> createListOfOrderItems(
+    List<CartItem> products,
+    ProductsProvider productsProvider,
+  ) {
+    final catrItemDetailsMaxwidth = MediaQuery.of(context).size.width - 140;
+    return products.map(
+      (prod) {
+        final productInCart = productsProvider.findById(prod.prodId);
+        return Card(
+          elevation: 3,
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 120,
+                  padding: EdgeInsets.all(5),
+                  child: Image.network(productInCart.imageUrl),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        productInCart.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: catrItemDetailsMaxwidth,
+                        child: Text(
+                          productInCart.description,
+                          softWrap: true,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10),
+                        width: catrItemDetailsMaxwidth,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "Price: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    '\$${productInCart.price}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                      '${prod.quantity} x \$${productInCart.price} = ',
+                                      style: TextStyle(color: Colors.grey)),
+                                  Text(
+                                    '\$' +
+                                        (prod.quantity * productInCart.price)
+                                            .toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.lightBlue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    ).toList();
   }
 }
