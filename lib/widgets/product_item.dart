@@ -78,8 +78,37 @@ class ProductItem extends StatelessWidget {
                           ? Icons.shopping_cart
                           : Icons.add_shopping_cart),
                       onPressed: () {
+                        if (!cartItem.isAvailableInCart(product.id)) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Container(
+                                alignment: Alignment.center,
+                                width: 200,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(50),
+                                  ),
+                                  color: Colors.red,
+                                ),
+                                child: Text("✓ Added to cart!"),
+                              ),
+                              elevation: 2.0,
+                              backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+                              duration: Duration(seconds: 50),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.all(
+                              //     Radius.circular(50),
+                              //   ),
+                              // ),
+                            ),
+                          );
+                        }
                         cartItem.addItem(
-                            product.id, product.price, product.title);
+                          product.id,
+                          product.price,
+                          product.title,
+                        );
                       },
                       color: Theme.of(context).accentColor,
                     ),
