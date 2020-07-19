@@ -24,6 +24,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     description: '',
     price: 0.0,
     imageUrl: '',
+    isFavorite: false,
   );
   var isInit = false;
 
@@ -126,6 +127,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
+                    isFavorite: _editedProduct.isFavorite,
                   );
                 },
               ),
@@ -156,6 +158,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     title: _editedProduct.title,
                     description: _editedProduct.description,
                     price: double.parse(value),
+                    isFavorite: _editedProduct.isFavorite,
                     imageUrl: _editedProduct.imageUrl,
                   );
                 },
@@ -182,6 +185,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     description: value,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
+                    isFavorite: _editedProduct.isFavorite,
                   );
                 },
               ),
@@ -243,6 +247,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           description: _editedProduct.description,
                           price: _editedProduct.price,
                           imageUrl: value,
+                          isFavorite: _editedProduct.isFavorite,
                         );
                       },
                     ),
