@@ -5,11 +5,13 @@ import '../screens/edit_product_screen.dart';
 class ManageProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final String id;
 
   const ManageProductItem({
     Key key,
     this.title,
     this.imageUrl,
+    this.id,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,10 @@ class ManageProductItem extends StatelessWidget {
                 color: Theme.of(context).accentColor,
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed(EditProductScreen.routName);
+                Navigator.of(context).pushNamed(
+                  EditProductScreen.routName,
+                  arguments: id,
+                );
               },
             ),
             IconButton(
