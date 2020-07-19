@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 import '../providers/cart_provider.dart';
 import '../providers/product_provider.dart';
@@ -79,29 +80,46 @@ class ProductItem extends StatelessWidget {
                           : Icons.add_shopping_cart),
                       onPressed: () {
                         if (!cartItem.isAvailableInCart(product.id)) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Container(
-                                alignment: Alignment.center,
-                                width: 200,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(50),
-                                  ),
-                                  color: Colors.red,
-                                ),
-                                child: Text("✓ Added to cart!"),
-                              ),
-                              elevation: 2.0,
-                              backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-                              duration: Duration(seconds: 50),
-                              // shape: RoundedRectangleBorder(
-                              //   borderRadius: BorderRadius.all(
-                              //     Radius.circular(50),
-                              //   ),
-                              // ),
-                            ),
+                          Toast.show(
+                            "✓ Added to cart!",
+                            context,
+                            textColor: Colors.white,
+                            backgroundColor: Colors.black54,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
+                          );
+                          // Scaffold.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Container(
+                          //       alignment: Alignment.center,
+                          //       width: 200,
+                          //       height: 50,
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.all(
+                          //           Radius.circular(50),
+                          //         ),
+                          //         color: Colors.red,
+                          //       ),
+                          //       child: Text("✓ Added to cart!"),
+                          //     ),
+                          //     elevation: 2.0,
+                          //     backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+                          //     duration: Duration(seconds: 50),
+                          //     // shape: RoundedRectangleBorder(
+                          //     //   borderRadius: BorderRadius.all(
+                          //     //     Radius.circular(50),
+                          //     //   ),
+                          //     // ),
+                          //   ),
+                          // );
+                        } else {
+                          Toast.show(
+                            "✓ Removed from cart!",
+                            context,
+                            textColor: Colors.white,
+                            backgroundColor: Colors.black54,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
                           );
                         }
                         cartItem.addItem(
