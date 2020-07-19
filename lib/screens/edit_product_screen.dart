@@ -25,11 +25,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
     price: 0.0,
     imageUrl: '',
   );
+  var isInit = false;
 
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
+    isInit = true;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      final String prodId = ModalRoute.of(context).settings.arguments as String;
+      if (prodId != null) {
+        _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+            .findById(prodId);
+      }
+      _imageUrlController.text = _editedProduct.imageUrl;
+    }
+    isInit = false;
+    setState(() {});
+    super.didChangeDependencies();
   }
 
   @override
@@ -59,8 +76,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final isValid = _form.currentState.validate();
     if (isValid) {
       _form.currentState.save();
-      Provider.of<ProductsProvider>(context, listen: false)
-          .addItem(_editedProduct);
+      if (_editedProduct.id == null) {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .addItem(_editedProduct);
+      } else {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .updateItem(_editedProduct);
+      }
       Navigator.of(context).pop();
     }
   }
@@ -69,7 +91,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Product"),
+        title: Text(
+            _editedProduct.id != null ? "Edit Product" : "Add new product"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
@@ -84,6 +107,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _editedProduct.title,
                 decoration: InputDecoration(labelText: "Title"),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -106,6 +130,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _editedProduct.price.toString(),
                 decoration: InputDecoration(labelText: "Price"),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -136,6 +161,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _editedProduct.description,
                 decoration: InputDecoration(labelText: "Description"),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,

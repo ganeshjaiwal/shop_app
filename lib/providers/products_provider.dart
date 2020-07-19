@@ -29,4 +29,18 @@ class ProductsProvider with ChangeNotifier {
   ProductProvider findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
+
+  void updateItem(ProductProvider product) {
+    for (var i = 0; i < _items.length; i++) {
+      if (_items[i].id == product.id) {
+        _items[i] = product;
+      }
+    }
+    notifyListeners();
+  }
+
+  void deleteItem(String id) {
+    _items.removeWhere((element) => id == element.id);
+    notifyListeners();
+  }
 }
