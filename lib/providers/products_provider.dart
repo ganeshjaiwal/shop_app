@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../providers/product_provider.dart';
 import '../dummy_products.dart';
@@ -15,15 +18,28 @@ class ProductsProvider with ChangeNotifier {
   }
 
   void addItem(ProductProvider product) {
-    final newProd = ProductProvider(
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProd);
-    notifyListeners();
+    String url =
+        'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products.json';
+    http
+        .post(url,
+            body: json.encode({
+              "title": product.title,
+              "price": product.price,
+              "description": product.description,
+              "imageUrl": product.imageUrl,
+              "isFavorite": product.isFavorite
+            }))
+        .then((response) {
+      final newProd = ProductProvider(
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProd);
+      notifyListeners();
+    });
   }
 
   ProductProvider findById(String id) {
