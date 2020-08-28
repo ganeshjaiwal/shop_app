@@ -17,10 +17,10 @@ class ProductsProvider with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  void addItem(ProductProvider product) {
+  Future<void> addItem(ProductProvider product) {
     String url =
         'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products.json';
-    http
+    return http
         .post(url,
             body: json.encode({
               "title": product.title,
@@ -39,6 +39,8 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.add(newProd);
       notifyListeners();
+    }).catchError((err) {
+      throw err;
     });
   }
 
