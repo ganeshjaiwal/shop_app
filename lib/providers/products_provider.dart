@@ -17,19 +17,29 @@ class ProductsProvider with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  Future<void> addItem(ProductProvider product) {
+  Future<void> fetchAndSetData() async {
+    final url =
+        "https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products.json";
+    final response = await http.get(url);
+    print(json.decode(response.body));
+  }
+
+  Future<void> addItem(ProductProvider product) async {
     String url =
         'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products.json';
-    return http
-        .post(url,
-            body: json.encode({
-              "title": product.title,
-              "price": product.price,
-              "description": product.description,
-              "imageUrl": product.imageUrl,
-              "isFavorite": product.isFavorite
-            }))
-        .then((response) {
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {
+            "title": product.title,
+            "price": product.price,
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+            "isFavorite": product.isFavorite
+          },
+        ),
+      );
       final newProd = ProductProvider(
         title: product.title,
         price: product.price,
@@ -39,9 +49,10 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.add(newProd);
       notifyListeners();
-    }).catchError((err) {
-      throw err;
-    });
+    } catch (error) {
+      print("Error");
+      throw error;
+    }
   }
 
   ProductProvider findById(String id) {

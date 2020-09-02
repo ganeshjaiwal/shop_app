@@ -6,6 +6,7 @@ import '../providers/cart_provider.dart';
 import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
 import '../screens/cart_screen.dart';
+import '../providers/products_provider.dart';
 
 enum FilterSectionValue { Favorite, All }
 
@@ -18,6 +19,24 @@ class ProductOverview extends StatefulWidget {
 
 class _ProductOverviewState extends State<ProductOverview> {
   var _shouldOnlyFav = false;
+  var _isInit = false;
+
+  @override
+  void initState() {
+    // Future.delayed(Duration.zero).then((_) {
+    //   Provider.of<ProductsProvider>(context).fetchAndSetData();
+    // });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      Provider.of<ProductsProvider>(context).fetchAndSetData();
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
