@@ -7,7 +7,7 @@ import '../providers/product_provider.dart';
 import '../dummy_products.dart';
 
 class ProductsProvider with ChangeNotifier {
-  List<ProductProvider> _items = DUMMY_PRODUCTS;
+  List<ProductProvider> _items = []; //DUMMY_PRODUCTS;
 
   List<ProductProvider> get items {
     return [..._items];
@@ -21,7 +21,22 @@ class ProductsProvider with ChangeNotifier {
     final url =
         "https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products.json";
     final response = await http.get(url);
-    print(json.decode(response.body));
+    List<ProductProvider> loadedProds = [];
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    responseData.forEach((prodId, prodData) {
+      loadedProds.add(
+        ProductProvider(
+          id: prodId,
+          title: prodData['title'],
+          price: prodData['price'],
+          description: prodData['description'],
+          imageUrl: prodData['imageUrl'],
+          isFavorite: prodData['isFavorite'],
+        ),
+      );
+    });
+    _items = loadedProds;
+    notifyListeners();
   }
 
   Future<void> addItem(ProductProvider product) async {
