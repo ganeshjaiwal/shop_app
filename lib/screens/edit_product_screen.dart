@@ -102,17 +102,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
               ],
             ),
           );
-        } finally {
-          setState(() {
-            this.isLoading = false;
-          });
-          Navigator.of(context).pop();
         }
+        // finally {
+        //   setState(() {
+        //     this.isLoading = false;
+        //   });
+        //   Navigator.of(context).pop();
+        // }
       } else {
-        Provider.of<ProductsProvider>(context, listen: false)
+        await Provider.of<ProductsProvider>(context, listen: false)
             .updateItem(_editedProduct);
-        Navigator.of(context).pop();
       }
+      setState(() {
+        this.isLoading = false;
+      });
+      Navigator.of(context).pop();
     }
   }
 

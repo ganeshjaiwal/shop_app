@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/models/HttpException.dart';
 
 import '../providers/product_provider.dart';
 import '../dummy_products.dart';
@@ -74,17 +75,56 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void updateItem(ProductProvider product) {
-    for (var i = 0; i < _items.length; i++) {
-      if (_items[i].id == product.id) {
-        _items[i] = product;
-      }
+  Future<void> updateItem(ProductProvider product) async {
+    final prodIndex = _items.indexWhere((element) => product.id == element.id);
+    if (prodIndex >= 0) {
+      final url =
+          'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products/${product.id}.json';
+      await http.patch(
+        url,
+        body: json.encode(
+          {
+            "title": product.title,
+            "price": product.price,
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+          },
+        ),
+      );
     }
+    // for (var i = 0; i < _items.length; i++) {
+    //   if (_items[i].id == product.id) {
+    //     _items[i] = product;
+    //   }
+    // }
     notifyListeners();
   }
 
-  void deleteItem(String id) {
+  Future<void> deleteItem(String id) async {
+    final url =
+        'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/products/$id.json';
+    final deletingProdIndex = _items.indexWhere((element) => element.id == id);
+    var deletingProd = _items[deletingProdIndex];
+
     _items.removeWhere((element) => id == element.id);
     notifyListeners();
+
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(deletingProdIndex, deletingProd);
+      notifyListeners();
+      throw HttpException("Problem in deleting the product.");
+    } else {
+      deletingProd = null;
+    }
+    // http.delete(url).then((response) {
+    //   if (response.statusCode >= 400) {
+    //     throw HttpException("Problem in deleting product.");
+    //   }
+    //   deletingProd = null;
+    // }).catchError((_) {
+    //   _items.insert(deletingProdIndex, deletingProd);
+    //   notifyListeners();
+    // });
   }
 }
