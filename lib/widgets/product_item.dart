@@ -21,6 +21,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     final product = Provider.of<ProductProvider>(context, listen: false);
     return Container(
       decoration: BoxDecoration(border: Border.all(color: Color(0xFFe4e3e3))),
@@ -57,8 +58,19 @@ class ProductItem extends StatelessWidget {
                       icon: Icon(product.isFavorite
                           ? Icons.favorite
                           : Icons.favorite_border),
-                      onPressed: () {
-                        product.toggelFavoriteStatus();
+                      onPressed: () async {
+                        try {
+                          await product.toggelFavoriteStatus();
+                        } catch (err) {
+                          scaffold.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                err.message,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        }
                       },
                       color: Theme.of(context).accentColor,
                     ),

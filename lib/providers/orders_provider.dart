@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shop_app/models/HttpException.dart';
 
 import '../providers/cart_provider.dart';
 
@@ -17,17 +21,32 @@ class OrderItem {
 }
 
 class OrdersProvider with ChangeNotifier {
+  final String orderUrl =
+      'https://ganesh-flutter-demo-apps.firebaseio.com/W3Shopee/orders';
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> cartItems, double totalAmt) {
+  Future<void> addOrder(List<CartItem> cartItems, double totalAmt) async {
+    final resp = await http.post(
+      orderUrl + '.json',
+      body: json.encode(
+        {
+          'date': DateTime.now().toString(),
+          'amount': totalAmt,
+          'products': cartItems.toString(),
+        },
+      ),
+    );
+    if (resp.statusCode >= 400) {
+      throw HttpException('Error placing your order');
+    }
     _orders.insert(
       0,
       OrderItem(
-        id: DateTime.now().toString(),
+        id: json.decode(resp.body)['name'],
         date: DateTime.now(),
         amount: totalAmt,
         products: cartItems,
