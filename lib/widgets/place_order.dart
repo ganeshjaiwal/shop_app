@@ -51,31 +51,51 @@ class PlaceOrder extends StatelessWidget {
                     height: 10,
                   ),
                   RaisedButton(
-                    onPressed: () {
-                      ordersProvider.addOrder(
-                        cartProvider.items.values.toList(),
-                        cartProvider.totalAmount,
-                      );
-                      Navigator.pop(context);
-                      cartProvider.clearCart();
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          elevation: 2,
-                          title: Text("Order Placed"),
-                          content:
-                              Text("Your order has been placed successfully."),
-                          actions: <Widget>[
-                            RaisedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Ok"),
-                              color: Colors.greenAccent,
-                            ),
-                          ],
-                        ),
-                      );
+                    onPressed: () async {
+                      try {
+                        await ordersProvider.addOrder(
+                          cartProvider.items.values.toList(),
+                          cartProvider.totalAmount,
+                        );
+                        Navigator.pop(context);
+                        cartProvider.clearCart();
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            elevation: 2,
+                            title: Text("Order Placed"),
+                            content: Text(
+                                "Your order has been placed successfully."),
+                            actions: <Widget>[
+                              RaisedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Ok"),
+                                color: Colors.greenAccent,
+                              ),
+                            ],
+                          ),
+                        );
+                      } catch (err) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            elevation: 2,
+                            title: Text("Error!"),
+                            content: Text(err.toString()),
+                            actions: <Widget>[
+                              RaisedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Ok"),
+                                color: Colors.redAccent,
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                     color: Colors.pinkAccent.shade400,
                     child: Text(
