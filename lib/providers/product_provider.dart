@@ -24,7 +24,7 @@ class ProductProvider with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggelFavoriteStatus() {
+  Future<void> toggelFavoriteStatus() async {
     isFavorite = !isFavorite;
     notifyListeners();
     _updateFavoriteStatus(!isFavorite, isFavorite);
